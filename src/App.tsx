@@ -3,6 +3,7 @@ import HomePage from "./pages/homePage";
 import Layout from "./components/layout";
 import AddEmployee from "./pages/addEmployee";
 import NoMatch from "./pages/noMatch";
+import "./styles/style.scss";
 
 function App() {
   return (

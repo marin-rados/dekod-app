@@ -1,0 +1,12 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+//imports
+@import "./components/header.scss";
+@import "./components/layout.scss";
+@import "./pages/addEmployee.scss";
+@import "./pages/homePage.scss";
+@import "./pages/noMatch.scss";
