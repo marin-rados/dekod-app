@@ -11,8 +11,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="employee/new" element={<AddEmployee />} />
+          {/* <Route path="employee/new" element={<AddEmployee />} /> */}
           <Route path="*" element={<NoMatch />} />
+          <Route path="employee/new" element={<AddEmployee isEdit={false} />} />
+          <Route
+            path="employee/:id/edit"
+            element={<AddEmployee isEdit={true} />}
+          />
         </Route>
       </Routes>
     </>

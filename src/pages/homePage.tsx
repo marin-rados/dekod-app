@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { EmployeeType } from "../types/global";
-import personImg from "../assets/person.png";
+import personImg from "../assets/person.svg";
 import { useSearchStore } from "../store/store";
 import SearchInput from "../components/searchInput";
+import plusIcon from "../assets/plus.svg";
+import { useNavigate } from "react-router";
 
 const HomePage = () => {
   const [data, setData] = useState<EmployeeType[]>([]);
   const { setSearch, search } = useSearchStore();
+  const [selectedPosition, setSelectedPosition] = useState<string>("All");
+  const navigate = useNavigate();
 
   const getData = () => {
     fetch("/api")
@@ -28,19 +32,62 @@ const HomePage = () => {
     getData();
   }, []);
 
-  function formatDate(dateString: string) {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
-  }
+  };
+
+  //FILTERING LOGIC
+
+  //make an array that has unique job positions
+  const uniqueJobTitles = Array.from(
+    new Set(data.map((employee) => employee.jobTitle))
+  );
+
+  //display appropriate data based on selected position
+  const filteredEmployees =
+    selectedPosition === "All"
+      ? data
+      : data.filter((employee) => employee.jobTitle === selectedPosition);
+
+  const handlePositionChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedPosition(event.target.value);
+  };
 
   return (
-    <>
-      <div className="home">
-        <SearchInput setSearch={setSearch} />
+    <div className="home">
+      <div className="intro">
+        <h1 className="intro__title">Employees</h1>
+        <button
+          onClick={() => navigate("/employee/new")}
+          className="intro__btn"
+        >
+          <img height={25} src={plusIcon} alt="Add Icon" /> Add New Employee
+        </button>
+      </div>
+      <div className="container">
+        <div className="filtering">
+          <SearchInput setSearch={setSearch} />
+          <label htmlFor="job-position">Filter by Job Position:</label>
+          <select
+            id="job-position"
+            value={selectedPosition}
+            onChange={handlePositionChange}
+          >
+            <option>All</option>
+            {uniqueJobTitles.map((jobTitle, index) => (
+              <option key={index} value={jobTitle}>
+                {jobTitle}
+              </option>
+            ))}
+          </select>
+        </div>
         <table className="employees">
           <thead className="employees__header">
             <tr className="employees__header__tags">
@@ -53,7 +100,7 @@ const HomePage = () => {
             </tr>
           </thead>
           <tbody>
-            {data
+            {filteredEmployees
               .filter((item: EmployeeType) => {
                 const keys = [
                   "firstName",
@@ -63,11 +110,21 @@ const HomePage = () => {
                 return search === ""
                   ? true
                   : keys.some((key) =>
-                      item[key].toLowerCase().includes(search)
+                      (item[key] as string)
+                        .toLowerCase()
+                        .includes(search.toLowerCase())
                     );
               })
               .map((employee: EmployeeType) => (
-                <tr key={employee.id} className="employee">
+                <tr
+                  key={employee.id}
+                  onClick={() =>
+                    navigate(`/employee/${employee.id}/edit`, {
+                      state: { employee },
+                    })
+                  }
+                  className="employee"
+                >
                   <td className="employee__info">{employee.id}</td>
                   <td className="employee__info">
                     <img
@@ -89,7 +146,7 @@ const HomePage = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 
