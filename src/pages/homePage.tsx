@@ -60,104 +60,129 @@ const HomePage = () => {
           onClick={() => navigate("/employee/new")}
           className="intro__btn"
         >
-          <img height={25} src={plusIcon} alt="Add Icon" /> Add New Employee
+          <img
+            className="intro__btn__plus"
+            height={25}
+            src={plusIcon}
+            alt="Add Icon"
+          />
+          Add New Employee
         </button>
       </div>
-
-      <div className="filtering">
-        <SearchInput setSearch={setSearch} />
-        <label htmlFor="job-position">Filter by Job Position:</label>
-        <select
-          id="job-position"
-          value={selectedPosition}
-          onChange={(e) => setSelectedPosition(e.target.value)}
-        >
-          <option>All</option>
-          {uniqueJobTitles.map((jobTitle, index) => (
-            <option key={index} value={jobTitle}>
-              {jobTitle}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="page-size">Items per page:</label>
-        <select
-          id="page-size"
-          value={pageSize}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-        >
-          {[5, 10, 15, 20].map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <table className="employees">
-        <thead className="employees__header">
-          <tr className="employees__header__tags">
-            <th className="employees__header__tags__tag">#</th>
-            <th className="employees__header__tags__tag">Photo</th>
-            <th className="employees__header__tags__tag">
-              <button onClick={() => handleSortChange("firstName")}>
-                First Name{" "}
-                {sortKey === "firstName" && (sortOrder === "asc" ? "↑" : "↓")}
-              </button>
-            </th>
-            <th className="employees__header__tags__tag">
-              <button onClick={() => handleSortChange("lastName")}>
-                Last Name{" "}
-                {sortKey === "lastName" && (sortOrder === "asc" ? "↑" : "↓")}
-              </button>
-            </th>
-            <th className="employees__header__tags__tag">Date of Birth</th>
-            <th className="employees__header__tags__tag">Job Title</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedEmployees.map((employee) => (
-            <tr
-              key={employee.id}
-              onClick={() =>
-                navigate(`/employee/${employee.id}/edit`, {
-                  state: { employee },
-                })
-              }
-              className="employee"
+      <div className="card">
+        <div className="filtering">
+          <SearchInput setSearch={setSearch} />
+          <div className="filtering__item">
+            <label className="filtering__item__label" htmlFor="page-size">
+              Items per page:
+            </label>
+            <select
+              className="filtering__item__select"
+              id="page-size"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
             >
-              <td className="employee__info">{employee.id}</td>
-              <td className="employee__info">
-                <img
-                  className="employee__img"
-                  src={personImg}
-                  height={50}
-                  width={50}
-                  alt="Employee"
-                />
-              </td>
-              <td className="employee__info">{employee.firstName}</td>
-              <td className="employee__info">{employee.lastName}</td>
-              <td className="employee__info">
-                {formatDate(employee.dateOfBirth)}
-              </td>
-              <td className="employee__info">{employee.jobTitle}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              {[5, 10, 15, 20].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="filtering__item">
+            <label className="filtering__item__label" htmlFor="job-position">
+              Filter by Job Position:
+            </label>
+            <select
+              className="filtering__item__select"
+              id="job-position"
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
+            >
+              <option>All</option>
+              {uniqueJobTitles.map((jobTitle, index) => (
+                <option key={index} value={jobTitle}>
+                  {jobTitle}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`pagination__button ${
-              currentPage === page ? "active" : ""
-            }`}
-          >
-            {page}
-          </button>
-        ))}
+        <table className="employees">
+          <thead className="employees__header">
+            <tr className="employees__header__tags">
+              <th className="employees__header__tags__tag">#</th>
+              <th className="employees__header__tags__tag">Photo</th>
+              <th className="employees__header__tags__tag">
+                <button
+                  className="filter-btn"
+                  onClick={() => handleSortChange("firstName")}
+                >
+                  <p className="filter-btn__title">First Name</p>
+                  {sortKey === "firstName" &&
+                    (sortOrder === "asc" ? "A-Z" : "Z-A")}
+                </button>
+              </th>
+              <th className="employees__header__tags__tag">
+                <button
+                  className="filter-btn"
+                  onClick={() => handleSortChange("lastName")}
+                >
+                  <p className="filter-btn__title">Last Name</p>
+                  {sortKey === "lastName" &&
+                    (sortOrder === "asc" ? "A-Z" : "Z-A")}
+                </button>
+              </th>
+              <th className="employees__header__tags__tag">Date of Birth</th>
+              <th className="employees__header__tags__tag">Job Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedEmployees.map((employee) => (
+              <tr
+                key={employee.id}
+                onClick={() =>
+                  navigate(`/employee/${employee.id}/edit`, {
+                    state: { employee },
+                  })
+                }
+                className="employee"
+              >
+                <td className="employee__info">{employee.id}</td>
+                <td className="employee__info">
+                  <img
+                    className="employee__img"
+                    src={personImg}
+                    height={50}
+                    width={50}
+                    alt="Employee"
+                  />
+                </td>
+                <td className="employee__info name">{employee.firstName}</td>
+                <td className="employee__info name">{employee.lastName}</td>
+                <td className="employee__info">
+                  {formatDate(employee.dateOfBirth)}
+                </td>
+                <td className="employee__info">{employee.jobTitle}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <div className="pagination">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`pagination__button ${
+                currentPage === page ? "pagination__button__active" : ""
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
