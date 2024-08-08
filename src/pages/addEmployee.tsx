@@ -70,10 +70,11 @@ const AddEmployee = ({ isEdit }: Props) => {
   return (
     <div className="add">
       <h2>{isEdit ? "Edit Employee" : "Add New Employee"}</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="add__form" onSubmit={handleSubmit}>
+        <div className="add__form__input">
           <label>First Name:</label>
           <input
+            className="form-inputs"
             type="text"
             name="firstName"
             value={employee.firstName}
@@ -82,9 +83,10 @@ const AddEmployee = ({ isEdit }: Props) => {
             required
           />
         </div>
-        <div>
+        <div className="add__form__input">
           <label>Last Name:</label>
           <input
+            className="form-inputs"
             type="text"
             name="lastName"
             value={employee.lastName}
@@ -93,9 +95,10 @@ const AddEmployee = ({ isEdit }: Props) => {
             required
           />
         </div>
-        <div>
+        <div className="add__form__input">
           <label>Date of Birth:</label>
           <input
+            className="form-inputs"
             type="date"
             name="dateOfBirth"
             value={formatToDateInputValue(employee.dateOfBirth)}
@@ -108,9 +111,10 @@ const AddEmployee = ({ isEdit }: Props) => {
           )}
           {dateError && <span className="error">{dateError}</span>}
         </div>
-        <div>
+        <div className="add__form__input">
           <label>Job Title:</label>
           <input
+            className="form-inputs"
             type="text"
             name="jobTitle"
             value={employee.jobTitle}
@@ -119,7 +123,9 @@ const AddEmployee = ({ isEdit }: Props) => {
             required
           />
         </div>
-        <button type="submit">{isEdit ? "Update" : "Save"}</button>
+        <button className="add__form__btn" type="submit">
+          {isEdit ? "Update" : "Save"}
+        </button>
       </form>
     </div>
   );

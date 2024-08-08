@@ -1,6 +1,22 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   padding: 2rem 0rem;
+  color: var(--color-grey-800);
+  &__logo {
+    cursor: pointer;
+    transition: all 100ms ease;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  &__link {
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    &:hover {
+      color: black;
+    }
+  }
 }

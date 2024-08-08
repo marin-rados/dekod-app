@@ -5,7 +5,13 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <div className="header">
-      <img onClick={() => navigate("/")} src={logoImg} alt="Logo Image" />
+      <img
+        className="header__logo"
+        onClick={() => navigate("/")}
+        src={logoImg}
+        height={60}
+        alt="Logo Image"
+      />
       <p className="header__link" onClick={() => navigate("/")}>
         Employee List
       </p>
