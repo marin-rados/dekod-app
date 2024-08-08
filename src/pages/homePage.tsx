@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { EmployeeType } from "../types/global";
-import personImg from "../assets/person.svg";
-import { useSearchStore } from "../store/store";
-import SearchInput from "../components/searchInput";
-import plusIcon from "../assets/plus.svg";
 import { useNavigate } from "react-router";
+
+import { EmployeeType } from "../types/global";
+import { useSearchStore } from "../store/store";
+
+import SearchInput from "../components/searchInput";
+
+import personImg from "../assets/person.svg";
+import plusIcon from "../assets/plus.svg";
+
+import { formatDate, getData } from "../utils/employeeUtils";
+import { useEmployeeFilters } from "../hooks/useEmployeeFilters";
 
 const HomePage = () => {
   //STATES
@@ -12,71 +18,14 @@ const HomePage = () => {
   const { setSearch, search } = useSearchStore();
   const [selectedPosition, setSelectedPosition] = useState<string>("All");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [sortKey, setSortKey] = useState<"id" | "firstName" | "lastName">("id"); // Added "id" as default sort key
+  const [sortKey, setSortKey] = useState<"id" | "firstName" | "lastName">("id");
   const [pageSize, setPageSize] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const navigate = useNavigate();
 
-  //fetch the data
-  const getData = () => {
-    fetch("/api")
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        console.log(res);
-      })
-      .then((data) => {
-        setData(data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
-    getData();
+    getData(setData);
   }, []);
-
-  //format the date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // FILTERING/SORTING LOGIC
-
-  //create array with unique job titles
-  const uniqueJobTitles = Array.from(
-    new Set(data.map((employee) => employee.jobTitle))
-  );
-
-  //initialy display all jobs, on job position select display only the employees with the selected job
-  const filteredEmployees =
-    selectedPosition === "All"
-      ? data
-      : data.filter((employee) => employee.jobTitle === selectedPosition);
-
-  //sort employees by first and last name
-  const sortedEmployees = filteredEmployees.sort((a, b) => {
-    if (a[sortKey] < b[sortKey]) {
-      return sortOrder === "asc" ? -1 : 1;
-    }
-    if (a[sortKey] > b[sortKey]) {
-      return sortOrder === "asc" ? 1 : -1;
-    }
-    return 0;
-  });
-
-  const handlePositionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setSelectedPosition(event.target.value);
-  };
 
   const handleSortChange = (key: "id" | "firstName" | "lastName") => {
     if (sortKey === key) {
@@ -87,24 +36,21 @@ const HomePage = () => {
     }
   };
 
-  const handlePageSizeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrentPage(1); //reset to first page whenever page size changes
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  //pagination Logic
-  const paginatedEmployees = sortedEmployees.slice(
+  const uniqueJobTitles = Array.from(
+    new Set(data.map((employee) => employee.jobTitle))
+  );
+  const filteredAndSortedEmployees = useEmployeeFilters(
+    data,
+    selectedPosition,
+    sortKey,
+    sortOrder,
+    search
+  );
+  const paginatedEmployees = filteredAndSortedEmployees.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
-
-  const totalPages = Math.ceil(sortedEmployees.length / pageSize);
+  const totalPages = Math.ceil(filteredAndSortedEmployees.length / pageSize);
 
   return (
     <div className="home">
@@ -124,7 +70,7 @@ const HomePage = () => {
         <select
           id="job-position"
           value={selectedPosition}
-          onChange={handlePositionChange}
+          onChange={(e) => setSelectedPosition(e.target.value)}
         >
           <option>All</option>
           {uniqueJobTitles.map((jobTitle, index) => (
@@ -134,7 +80,11 @@ const HomePage = () => {
           ))}
         </select>
         <label htmlFor="page-size">Items per page:</label>
-        <select id="page-size" value={pageSize} onChange={handlePageSizeChange}>
+        <select
+          id="page-size"
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+        >
           {[5, 10, 15, 20].map((size) => (
             <option key={size} value={size}>
               {size}
@@ -142,6 +92,7 @@ const HomePage = () => {
           ))}
         </select>
       </div>
+
       <table className="employees">
         <thead className="employees__header">
           <tr className="employees__header__tags">
@@ -164,56 +115,42 @@ const HomePage = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedEmployees
-            .filter((item: EmployeeType) => {
-              const keys = [
-                "firstName",
-                "lastName",
-                "jobTitle",
-              ] as (keyof EmployeeType)[];
-              return search === ""
-                ? true
-                : keys.some((key) =>
-                    (item[key] as string)
-                      .toLowerCase()
-                      .includes(search.toLowerCase())
-                  );
-            })
-            .map((employee: EmployeeType) => (
-              <tr
-                key={employee.id}
-                onClick={() =>
-                  navigate(`/employee/${employee.id}/edit`, {
-                    state: { employee },
-                  })
-                }
-                className="employee"
-              >
-                <td className="employee__info">{employee.id}</td>
-                <td className="employee__info">
-                  <img
-                    className="employee__img"
-                    src={personImg}
-                    height={50}
-                    width={50}
-                    alt="Image of an employee"
-                  />
-                </td>
-                <td className="employee__info">{employee.firstName}</td>
-                <td className="employee__info">{employee.lastName}</td>
-                <td className="employee__info">
-                  {formatDate(employee.dateOfBirth)}
-                </td>
-                <td className="employee__info">{employee.jobTitle}</td>
-              </tr>
-            ))}
+          {paginatedEmployees.map((employee) => (
+            <tr
+              key={employee.id}
+              onClick={() =>
+                navigate(`/employee/${employee.id}/edit`, {
+                  state: { employee },
+                })
+              }
+              className="employee"
+            >
+              <td className="employee__info">{employee.id}</td>
+              <td className="employee__info">
+                <img
+                  className="employee__img"
+                  src={personImg}
+                  height={50}
+                  width={50}
+                  alt="Employee"
+                />
+              </td>
+              <td className="employee__info">{employee.firstName}</td>
+              <td className="employee__info">{employee.lastName}</td>
+              <td className="employee__info">
+                {formatDate(employee.dateOfBirth)}
+              </td>
+              <td className="employee__info">{employee.jobTitle}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
+
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
-            onClick={() => handlePageChange(page)}
+            onClick={() => setCurrentPage(page)}
             className={`pagination__button ${
               currentPage === page ? "active" : ""
             }`}

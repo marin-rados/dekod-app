@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router";
+
 import { AddEditEmployeeType } from "../types/global";
+
+import {
+  validateEmployee,
+  validateDate,
+  formatToDateInputValue,
+} from "../utils/employeeFormUtils";
 
 type Props = {
   isEdit: boolean;
@@ -17,7 +24,7 @@ const AddEmployee = ({ isEdit }: Props) => {
     jobTitle: "",
   });
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<Record<string, boolean>>({
     firstName: false,
     lastName: false,
     dateOfBirth: false,
@@ -34,69 +41,30 @@ const AddEmployee = ({ isEdit }: Props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    if (name !== "dateOfBirth" && /[^a-zA-Z\s]/.test(value)) {
+      return;
+    }
+
     setEmployee({ ...employee, [name]: value });
 
     if (name === "dateOfBirth") {
-      validateDate(value);
+      validateDate(value, setDateError);
     }
   };
 
-  //check for empty inputs
-  const validate = (): boolean => {
-    let valid = true;
-    let newErrors = { ...errors };
-
-    Object.keys(employee).forEach((key) => {
-      if ((employee as any)[key] === "") {
-        newErrors[key as keyof typeof errors] = true;
-        valid = false;
-      } else {
-        newErrors[key as keyof typeof errors] = false;
-      }
-    });
-
-    setErrors(newErrors);
-    return valid;
-  };
-
-  //redirect to homepage
-  const handleRedirect = () => {
-    setTimeout(() => {
-      navigate("/");
-    }, 100);
-  };
-
-  //form submit, console log values, redirect user to homepage/employee list
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
+    if (validateEmployee(employee, errors, setErrors)) {
       console.log("Employee data:", employee);
       handleRedirect();
     }
   };
 
-  //check date values
-  const validateDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const minDate = new Date("1900-01-01");
-    const maxDate = new Date();
-
-    if (date < minDate) {
-      setDateError("Date of Birth cannot be before 1900.");
-    } else if (date > maxDate) {
-      setDateError("Date of Birth cannot be in the future.");
-    } else {
-      setDateError(null);
-    }
-  };
-
-  //format date value
-  const formatToDateInputValue = (dateString: string) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  const handleRedirect = () => {
+    setTimeout(() => {
+      navigate("/");
+    }, 100);
   };
 
   return (
@@ -135,6 +103,10 @@ const AddEmployee = ({ isEdit }: Props) => {
             placeholder="Date of Birth"
             required
           />
+          {errors.dateOfBirth && (
+            <span className="error">Date of Birth is required</span>
+          )}
+          {dateError && <span className="error">{dateError}</span>}
         </div>
         <div>
           <label>Job Title:</label>
@@ -146,10 +118,6 @@ const AddEmployee = ({ isEdit }: Props) => {
             placeholder="Job Title"
             required
           />
-          {errors.dateOfBirth && (
-            <span className="error">Date of Birth is required</span>
-          )}
-          {dateError && <span className="error">{dateError}</span>}
         </div>
         <button type="submit">{isEdit ? "Update" : "Save"}</button>
       </form>
