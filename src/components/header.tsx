@@ -6,8 +6,11 @@ const Header = () => {
   return (
     <div className="header">
       <img onClick={() => navigate("/")} src={logoImg} alt="Logo Image" />
-      <p onClick={() => navigate("/")}>Employees</p>
-      <p onClick={() => navigate("/employee/new")}>Add Employee</p>
+      <p className="header__link" onClick={() => navigate("/")}>
+        Employee List
+      </p>
+      <p className="header__link">About</p>
+      <p className="header__link">Contact</p>
     </div>
   );
 };

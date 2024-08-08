@@ -24,6 +24,8 @@ const AddEmployee = ({ isEdit }: Props) => {
     jobTitle: false,
   });
 
+  const [dateError, setDateError] = useState<string | null>(null);
+
   useEffect(() => {
     if (isEdit && state?.employee) {
       setEmployee(state.employee);
@@ -33,8 +35,13 @@ const AddEmployee = ({ isEdit }: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEmployee({ ...employee, [name]: value });
+
+    if (name === "dateOfBirth") {
+      validateDate(value);
+    }
   };
 
+  //check for empty inputs
   const validate = (): boolean => {
     let valid = true;
     let newErrors = { ...errors };
@@ -52,6 +59,14 @@ const AddEmployee = ({ isEdit }: Props) => {
     return valid;
   };
 
+  //redirect to homepage
+  const handleRedirect = () => {
+    setTimeout(() => {
+      navigate("/");
+    }, 100);
+  };
+
+  //form submit, console log values, redirect user to homepage/employee list
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
@@ -60,12 +75,22 @@ const AddEmployee = ({ isEdit }: Props) => {
     }
   };
 
-  const handleRedirect = () => {
-    setTimeout(() => {
-      navigate("/");
-    }, 100);
+  //check date values
+  const validateDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const minDate = new Date("1900-01-01");
+    const maxDate = new Date();
+
+    if (date < minDate) {
+      setDateError("Date of Birth cannot be before 1900.");
+    } else if (date > maxDate) {
+      setDateError("Date of Birth cannot be in the future.");
+    } else {
+      setDateError(null);
+    }
   };
 
+  //format date value
   const formatToDateInputValue = (dateString: string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -86,10 +111,8 @@ const AddEmployee = ({ isEdit }: Props) => {
             value={employee.firstName}
             onChange={handleChange}
             placeholder="First Name"
+            required
           />
-          {errors.firstName && (
-            <span style={{ color: "red" }}>Required field</span>
-          )}
         </div>
         <div>
           <label>Last Name:</label>
@@ -99,23 +122,19 @@ const AddEmployee = ({ isEdit }: Props) => {
             value={employee.lastName}
             onChange={handleChange}
             placeholder="Last Name"
+            required
           />
-          {errors.lastName && (
-            <span style={{ color: "red" }}>Required field</span>
-          )}
         </div>
         <div>
           <label>Date of Birth:</label>
           <input
             type="date"
-            name="birthDate"
+            name="dateOfBirth"
             value={formatToDateInputValue(employee.dateOfBirth)}
             onChange={handleChange}
-            placeholder="Birth Date"
+            placeholder="Date of Birth"
+            required
           />
-          {errors.dateOfBirth && (
-            <span style={{ color: "red" }}>Required field</span>
-          )}
         </div>
         <div>
           <label>Job Title:</label>
@@ -125,10 +144,12 @@ const AddEmployee = ({ isEdit }: Props) => {
             value={employee.jobTitle}
             onChange={handleChange}
             placeholder="Job Title"
+            required
           />
-          {errors.jobTitle && (
-            <span style={{ color: "red" }}>Required field</span>
+          {errors.dateOfBirth && (
+            <span className="error">Date of Birth is required</span>
           )}
+          {dateError && <span className="error">{dateError}</span>}
         </div>
         <button type="submit">{isEdit ? "Update" : "Save"}</button>
       </form>
