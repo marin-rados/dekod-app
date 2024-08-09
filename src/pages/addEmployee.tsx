@@ -69,10 +69,12 @@ const AddEmployee = ({ isEdit }: Props) => {
 
   return (
     <div className="add">
-      <h2>{isEdit ? "Edit Employee" : "Add New Employee"}</h2>
+      <h1 className="add__title">
+        {isEdit ? "Edit Employee" : "Add New Employee"}
+      </h1>
       <form className="add__form" onSubmit={handleSubmit}>
         <div className="add__form__input">
-          <label>First Name:</label>
+          <label className="add__form__input__label">First Name:</label>
           <input
             className="form-inputs"
             type="text"
@@ -84,7 +86,7 @@ const AddEmployee = ({ isEdit }: Props) => {
           />
         </div>
         <div className="add__form__input">
-          <label>Last Name:</label>
+          <label className="add__form__input__label">Last Name:</label>
           <input
             className="form-inputs"
             type="text"
@@ -96,7 +98,7 @@ const AddEmployee = ({ isEdit }: Props) => {
           />
         </div>
         <div className="add__form__input">
-          <label>Date of Birth:</label>
+          <label className="add__form__input__label">Date of Birth:</label>
           <input
             className="form-inputs"
             type="date"
@@ -112,7 +114,7 @@ const AddEmployee = ({ isEdit }: Props) => {
           {dateError && <span className="error">{dateError}</span>}
         </div>
         <div className="add__form__input">
-          <label>Job Title:</label>
+          <label className="add__form__input__label">Job Title:</label>
           <input
             className="form-inputs"
             type="text"

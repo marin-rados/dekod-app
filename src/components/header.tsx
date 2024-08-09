@@ -9,7 +9,6 @@ const Header = () => {
         className="header__logo"
         onClick={() => navigate("/")}
         src={logoImg}
-        height={60}
         alt="Logo Image"
       />
       <p className="header__link" onClick={() => navigate("/")}>

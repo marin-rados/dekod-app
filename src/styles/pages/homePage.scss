@@ -17,6 +17,15 @@
   width: 90%;
   &__title {
     font-size: 2.5rem;
+    @media only screen and (max-width: 900px) {
+      font-size: 2rem;
+    }
+    @media only screen and (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+    @media only screen and (max-width: 500px) {
+      font-size: 1rem;
+    }
   }
   &__btn {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -35,7 +44,26 @@
       background-color: var(--color-blue-600);
     }
     &__plus {
+      height: 2rem;
       margin-right: 1rem;
+      @media only screen and (max-width: 900px) {
+        height: 1.5rem;
+      }
+      @media only screen and (max-width: 650px) {
+        height: 1.25rem;
+      }
+    }
+    @media only screen and (max-width: 900px) {
+      padding: 1rem 1.5rem;
+    }
+    @media only screen and (max-width: 600px) {
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+    }
+    @media only screen and (max-width: 500px) {
+      padding: 0.5rem;
+      font-size: 0.5rem;
+      font-weight: 400;
     }
   }
 }
@@ -46,6 +74,7 @@
   background-color: var(--color-white);
   width: 90%;
   border-radius: var(--border-round);
+  overflow: hidden;
 }
 
 .filtering {
@@ -60,10 +89,22 @@
     justify-content: center;
     &__label {
       margin-right: 1rem;
+      @media only screen and (max-width: 650px) {
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+      }
+      @media only screen and (max-width: 500px) {
+        font-size: 0.5rem;
+        margin-right: 0rem;
+      }
     }
     &__select {
       padding: 0.5rem;
       border-radius: var(--border-xs);
+      @media only screen and (max-width: 500px) {
+        padding: 0rem;
+        width: 50%;
+      }
     }
   }
 }
@@ -74,6 +115,7 @@
   border-collapse: collapse;
   color: var(--color-grey-800);
   &__header {
+    width: 100%;
     background-color: var(--color-grey-200);
     &__tags {
       text-align: left;
@@ -82,6 +124,20 @@
         font-weight: 500;
         line-height: 1rem;
         padding: 1.5rem;
+        @media only screen and (max-width: 900px) {
+          padding: 1rem;
+        }
+        @media only screen and (max-width: 780px) {
+          padding: 0rem;
+        }
+        @media only screen and (max-width: 650px) {
+          padding: 0rem;
+          font-size: 0.75rem;
+        }
+        @media only screen and (max-width: 450px) {
+          padding: 0rem;
+          font-size: 0.5rem;
+        }
       }
     }
   }
@@ -99,6 +155,20 @@
   &__title {
     margin-right: 0.5rem;
     font-weight: 500;
+    @media only screen and (max-width: 900px) {
+      padding: 1rem;
+    }
+    @media only screen and (max-width: 780px) {
+      padding: 0rem;
+    }
+    @media only screen and (max-width: 650px) {
+      padding: 0rem;
+      font-size: 0.75rem;
+    }
+    @media only screen and (max-width: 450px) {
+      padding: 0rem;
+      font-size: 0.5rem;
+    }
   }
   &:hover {
     color: black;
@@ -106,6 +176,7 @@
 }
 
 .employee {
+  width: 100%;
   border-bottom: 2px solid rgba(242, 243, 247, 255);
   cursor: pointer;
   transition: background-color 100ms ease-in;
@@ -113,13 +184,36 @@
     background-color: var(--color-grey-400);
   }
   &__info {
-    font-size: 500;
     padding: 1.5rem;
-  }
-  &__img {
-    border-radius: var(--border-sm);
-    object-fit: cover;
-    object-position: center;
+    &__img {
+      height: 4rem;
+      border-radius: var(--border-sm);
+      object-fit: cover;
+      object-position: center;
+      @media only screen and (max-width: 780px) {
+        height: 3rem;
+      }
+      @media only screen and (max-width: 650px) {
+        height: 2rem;
+      }
+      @media only screen and (max-width: 450px) {
+        height: 1.5rem;
+      }
+    }
+    @media only screen and (max-width: 900px) {
+      padding: 1rem;
+    }
+    @media only screen and (max-width: 780px) {
+      padding: 0rem;
+    }
+    @media only screen and (max-width: 650px) {
+      padding: 0rem;
+      font-size: 0.75rem;
+    }
+    @media only screen and (max-width: 450px) {
+      padding: 0rem;
+      font-size: 0.5rem;
+    }
   }
 }
 
@@ -154,6 +248,12 @@
     }
     &:hover {
       transform: scale(1.1);
+    }
+    @media only screen and (max-width: 600px) {
+      padding: 0.5rem 0.8rem;
+    }
+    @media only screen and (max-width: 400px) {
+      padding: 0rem;
     }
   }
 }

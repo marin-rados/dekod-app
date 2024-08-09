@@ -60,12 +60,7 @@ const HomePage = () => {
           onClick={() => navigate("/employee/new")}
           className="intro__btn"
         >
-          <img
-            className="intro__btn__plus"
-            height={25}
-            src={plusIcon}
-            alt="Add Icon"
-          />
+          <img className="intro__btn__plus" src={plusIcon} alt="Add Icon" />
           Add New Employee
         </button>
       </div>
@@ -152,10 +147,8 @@ const HomePage = () => {
                 <td className="employee__info">{employee.id}</td>
                 <td className="employee__info">
                   <img
-                    className="employee__img"
+                    className="employee__info__img"
                     src={personImg}
-                    height={50}
-                    width={50}
                     alt="Employee"
                   />
                 </td>

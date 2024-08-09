@@ -1,0 +1,23 @@
+.no-match {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding-top: 10rem;
+  width: 100%;
+  @media only screen and (max-width: 700px) {
+    padding-top: 5rem;
+  }
+  @media only screen and (max-width: 500px) {
+    padding-top: 2rem;
+  }
+  &__message {
+    font-size: 2rem;
+    font-weight: bold;
+    @media only screen and (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+    @media only screen and (max-width: 400px) {
+      font-size: 1rem;
+    }
+  }
+}

@@ -7,6 +7,15 @@
   background-color: var(--color-grey-200);
   gap: 1rem 0rem;
   padding: 2rem;
+  &__title {
+    font-weight: bold;
+    @media only screen and (max-width: 700px) {
+      font-size: 1.5rem;
+    }
+    @media only screen and (max-width: 400px) {
+      font-size: 1.25rem;
+    }
+  }
   &__form {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     display: flex;
@@ -18,12 +27,20 @@
     gap: 1rem;
     background-color: var(--color-white);
     border-radius: var(--border-round);
+    @media only screen and (max-width: 400px) {
+      width: 95%;
+    }
     &__input {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      &__label {
+        @media only screen and (max-width: 400px) {
+          font-size: 0.75rem;
+        }
+      }
     }
     &__btn {
       box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -41,10 +58,19 @@
       &:hover {
         background-color: var(--color-blue-600);
       }
+      @media only screen and (max-width: 400px) {
+        width: 100%;
+        padding: 1rem 3rem;
+      }
+      @media only screen and (max-width: 350px) {
+        width: 100%;
+        padding: 1rem 2rem;
+      }
     }
   }
 }
 
 .form-inputs {
+  width: 100%;
   padding: 0.5rem;
 }

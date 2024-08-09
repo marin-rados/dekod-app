@@ -5,10 +5,17 @@
   padding: 2rem 0rem;
   color: var(--color-grey-800);
   &__logo {
+    height: 4rem;
     cursor: pointer;
     transition: all 100ms ease;
     &:hover {
       transform: scale(1.1);
+    }
+    @media only screen and (max-width: 650px) {
+      height: 3rem;
+    }
+    @media only screen and (max-width: 500px) {
+      height: 2rem;
     }
   }
   &__link {
@@ -17,6 +24,12 @@
     transition: all 150ms ease-in-out;
     &:hover {
       color: black;
+    }
+    @media only screen and (max-width: 500px) {
+      font-size: 1rem;
+    }
+    @media only screen and (max-width: 400px) {
+      font-size: 0.75rem;
     }
   }
 }
